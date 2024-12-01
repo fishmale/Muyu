@@ -24,10 +24,47 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            VStack {
+                Text("Muyu")
+                    .font(.system(.largeTitle, design: .serif))
+                Text("App")
+                    .font(.system(.footnote, design: .serif))
+                    .foregroundStyle(.gray)
+            }
+            .padding()
+            
+            Divider()
+            
+            Gauge(value: touchCount, in: 0...30, label: {
+                Image(systemName: "leaf.fill")
+                    .foregroundStyle(.yellow)
+            })
+            .gaugeStyle(DefaultGaugeStyle())
+            .tint(Gradient(colors: [.gray, .yellow]))
+            .padding()
+            
+            Spacer()
+            
+            if Int(touchCount) != 0 {
+                if (Int(touchCount) % 10) == 0{
+                    Text("叶片" + "10")
+                        .foregroundStyle(selectedColor)
+                }
+            }
+            
+            Button{
+                selectedColor = colors.randomElement() ?? .yellow
+                _touchCount += 1
+                tapped += 1
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){tapped -= 1}
+            }label: {
+                Image(systemName: "leaf.fill")
+                    .font(.system(size: 230))
+                    .foregroundStyle(selectedColor)
+                    .scaleEffect(tapped > 0 ? 1.2 : 1)
+                    .animation(Animation.linear(duration: 0.1), value: UUID())
+            }
+            Spacer()
         }
         .padding()
     }
